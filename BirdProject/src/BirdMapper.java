@@ -17,15 +17,10 @@ public class BirdMapper extends Mapper<LongWritable, Text, Text, Text>
     String line = value.toString();
     String tokens[] = line.split(",");
     String state = tokens[9];
-    String[] sightings = Arrays.copyOfRange(tokens, 19, tokens.length-1);
-
-    int total = 0;
-    for(String birds : sightings)
-    {
-      total = total + Integer.parseInt(birds);
-    }
-
-    String totalBirds = total + "";
-    context.write(new Text(state), new Text(totalBirds));
+    String observer_id = tokens[15];
+    
+    context.write(new Text(state), new Text(observer_id));
   }
+
+
 }

@@ -10,19 +10,21 @@ import org.apache.hadoop.mapreduce.*;
     Output Key - which is state
     Output Value - a collection of all the players
 */
-public class BirdReducer extends Reducer<Text, Text, Text, Text>
+public class BirdReducer extends Reducer<Text, Text, Text, IntWritable>
 {
   @Override
-  public void reduce(Text key, Text values, Context context)
+  public void reduce(Text key, Iterable<Text> values, Context context)
     throws IOException, InterruptedException
   {
-    int totalSightings = 0;
-    for (Text i : values)
+    List<Text> birdwatchers = new ArrayList<Text>();
+    
+    for (Text t : values)
     {
-      totalSightings = totalSightings + Integer.parseInt(i.toString());
+      if(!birdwatchers.contains(t))
+      {
+        birdwatchers.add(new Text(t));
+      }
     }
-
-    totalSightings.toString();
-    context.write(key, totalSightings);
+    context.write(key, new IntWritable(birdwatchers.size()));
   }
 }
